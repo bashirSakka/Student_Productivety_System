@@ -1,13 +1,15 @@
-import Notes from './components/views/Notes'
-import Pomodoro from './components/views/Pomodoro'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import ViewportProvider from './hooks/ViewportContext'
 import GridSection from './components/layout/GridSection'
 import Navbar from './components/layout/Navbar'
 import Burger from './components/layout/Burger'
-import ViewportContext from './hooks/ViewportContext'
 import Dashboard from './components/views/Dashboard'
-
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import ViewportProvider from './hooks/ViewportContext'
+import Notes from './components/views/Notes'
+import Pomodoro from './components/views/Pomodoro'
+import Courses from './components/views/Courses'
+import Tasks from './components/views/Tasks'
+import Calender from './components/views/Calender'
+import GPACalculator from './components/views/GPACalculator'
 
 function App () {
   return (
@@ -20,17 +22,37 @@ function App () {
               <GridSection
                 navbar={<Navbar />}
                 burger={<Burger />}
-                dashboard={<Dashboard />}
+                page={<Dashboard />}
               />
             }
           />
           <Route
-            path='/notes'
+            path='/courses'
             element={
               <GridSection
                 navbar={<Navbar />}
                 burger={<Burger />}
-                dashboard={<Notes />}
+                page={<Courses />}
+              />
+            }
+          />
+          <Route
+            path='/tasks'
+            element={
+              <GridSection
+                navbar={<Navbar />}
+                burger={<Burger />}
+                page={<Tasks />}
+              />
+            }
+          />
+          <Route
+            path='/calendar'
+            element={
+              <GridSection
+                navbar={<Navbar />}
+                burger={<Burger />}
+                page={<Calender />}
               />
             }
           />
@@ -40,7 +62,27 @@ function App () {
               <GridSection
                 navbar={<Navbar />}
                 burger={<Burger />}
-                dashboard={<Pomodoro />}
+                page={<Pomodoro />}
+              />
+            }
+          />
+          <Route
+            path='/gpa'
+            element={
+              <GridSection
+                navbar={<Navbar />}
+                burger={<Burger />}
+                page={<GPACalculator />}
+              />
+            }
+          />
+          <Route
+            path='/notes'
+            element={
+              <GridSection
+                navbar={<Navbar />}
+                burger={<Burger />}
+                page={<Notes />}
               />
             }
           />

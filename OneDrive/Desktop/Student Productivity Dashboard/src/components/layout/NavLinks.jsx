@@ -17,10 +17,10 @@ export default function NavLinks ({ onNavigate }) {
   const location = useLocation()
 
   const linkClass = path =>
-    `flex items-center w-full cursor-pointer px-2.5 gap-2.5 py-1.5 text-text-secondary rounded-md text-sm ${
+    `flex items-center w-full cursor-pointer px-2.5 gap-2.5 py-1.5 text-text-secondary rounded-md text-sm border transition-colors duration-200 ${
       location.pathname === path
-        ? 'bg-white border border-border-strong'
-        : 'duration-200 hover:bg-cream3'
+        ? 'bg-white border-border-strong'
+        : 'border-transparent hover:bg-cream3'
     }`
 
   return (
