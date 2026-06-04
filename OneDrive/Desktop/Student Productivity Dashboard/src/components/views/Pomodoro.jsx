@@ -1,5 +1,7 @@
 import { useState, useEffect, useReducer } from 'react'
 import Card from '../ui/Card'
+import Pill from '../ui/Pill'
+import Button from '../ui/Button'
 import { IconPlus } from '@tabler/icons-react'
 import { IconMinus } from '@tabler/icons-react'
 
@@ -133,19 +135,16 @@ export default function Pomodoro () {
         <Card className='col-span-2'>
           <div className='flex flex-row mb-8 gap-2'>
             {['Focus', 'Short Break', 'Long Break'].map(key => (
-              <div
+              <Pill
                 key={sessionMapping[key] || 'longBreak'}
-                className={`${
-                  state.session === sessionMapping[key]
-                    ? activeTab
-                    : 'border border-border-strong'
-                } border flex items-center justify-center w-[max-content] border-border-strong rounded-[99px] py-[6px] px-4 font-medium text-xs cursor-pointer hover:bg-cream3`}
+                className={
+                  state.session === sessionMapping[key] ? activeTab : ''
+                }
               >
                 {key}
-              </div>
+              </Pill>
             ))}
           </div>
-
           <div className='flex flex-col items-center justify-center'>
             <div className='flex mb-4 items-center justify-center w-[180px] h-[180px] text-[43px] rounded-full border-2 border-peach bg-peach-light  font-family-display'>
               {String(minutes).padStart(2, '0')}:
@@ -161,13 +160,13 @@ export default function Pomodoro () {
             </p>
             <div className='flex flex-row mb-4 gap-2'>
               {buttons.map(btn => (
-                <div
+                <Button
                   onClick={btn.onClick}
                   key={btn.label}
-                  className={` border flex items-center justify-center w-[max-content] rounded-md border-border-strong  py-[6px] px-4 font-medium text-xs cursor-pointer hover:bg-cream3`}
+                  className={`  hover:bg-black hover:text-white duration-200 transition-colors`}
                 >
                   {btn.label}
-                </div>
+                </Button>
               ))}
             </div>
 
@@ -178,6 +177,28 @@ export default function Pomodoro () {
                   className='w-[7px] h-[7px] bg-peach rounded-full'
                 />
               ))}
+            </div>
+          </div>
+
+          <p className='text-text-muted text-[10px] uppercase pt-3 border-t border-border-strong'>
+            Today' stats
+          </p>
+          <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-3'>
+            <div className='bg-cream2 rounded-md p-3'>
+              <p className='text-text-muted text-[10px] uppercase mb-2'>
+                Sessions
+              </p>
+              <p className='text-2xl font-family-display  font-medium'>3</p>
+            </div>{' '}
+            <div className='bg-cream2 rounded-md p-3'>
+              <p className='text-text-muted text-[10px] uppercase mb-2'>
+                focus time
+              </p>
+              <p className='text-2xl font-family-display  font-medium'>3</p>
+            </div>{' '}
+            <div className='bg-cream2 rounded-md p-3'>
+              <p className='text-text-muted text-[10px] uppercase mb-2'>goal</p>
+              <p className='text-2xl font-family-display  font-medium'>3</p>
             </div>
           </div>
         </Card>

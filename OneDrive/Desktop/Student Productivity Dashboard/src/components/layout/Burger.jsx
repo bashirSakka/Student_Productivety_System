@@ -19,7 +19,7 @@ export default function Burger () {
   const pageName = pageNames[location.pathname] || 'Dashboard'
 
   return (
-    <header className='flex items-center justify-between px-[18px] h-[52px] bg-cream2 border-b border-black/10'>
+    <header className='sticky top-0 z-30 flex items-center justify-between px-[18px] h-[52px] bg-cream2 border-b border-black/10'>
       <div className='font-display text-[15px] font-medium text-text-main'>
         study<span className='italic text-sagedark'>flow</span>
       </div>

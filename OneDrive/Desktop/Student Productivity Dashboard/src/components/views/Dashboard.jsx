@@ -63,7 +63,7 @@ export default function Dashboard () {
   }).format(new Date())
 
   return (
-    <div className='p-8 bg-cream'>
+    <div>
       <div className='mb-10'>
         <h2 className='font-family-display text-xl'>
           {greeting} {icon}
