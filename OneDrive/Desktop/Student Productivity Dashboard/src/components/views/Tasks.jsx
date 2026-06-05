@@ -1,11 +1,11 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import Pill from '../ui/Pill'
 import Button from '../ui/Button'
 import Card from '../ui/Card'
-import { DotLottieReact } from '@lottiefiles/dotlottie-react'
+import EmptyState from '../ui/EmptyState'
+import emptyTasks from '../animations/noData.json'
 
 import { IconCalendar } from '@tabler/icons-react'
-import emptyTasks from '../animations/noData.json'
 const stats = [
   { label: 'Done', value: 5, color: 'text-sage-dark' },
   { label: 'Left', value: 5, color: 'text-sage-dark' },
@@ -13,6 +13,7 @@ const stats = [
 ]
 
 export default function Tasks () {
+  const nextId = useRef(0)
   const [form, setForm] = useState({ label: '', tag: '', due: '' })
   const [display, setDisplay] = useState(false)
   // const handleSubmit = (field, value) => {
@@ -21,7 +22,8 @@ export default function Tasks () {
   function handleSubmit (e) {
     e.preventDefault()
     if (!form.label.trim()) return
-    setTasks([...tasks, { ...form, id: Date.now(), done: false }])
+    const id = nextId.current++
+    setTasks([...tasks, { ...form, id, done: false }])
     setForm({ label: '', tag: '', due: '' })
   }
 
@@ -150,17 +152,11 @@ export default function Tasks () {
         </div>
       </div>
       {tasks.length === 0 && !display && (
-        <div className='flex flex-col items-center justify-center py-10 text-center'>
-          <div className='w-45'>
-            <DotLottieReact data={emptyTasks} loop autoplay />
-          </div>
-          <p className='text-text-primary font-medium text-sm mt-2'>
-            No tasks yet
-          </p>
-          <p className='text-text-muted text-xs mt-1'>
-            Add your first task to get started
-          </p>
-        </div>
+        <EmptyState
+          animation={emptyTasks}
+          title='No tasks yet'
+          subtitle='Add your first task to get started'
+        />
       )}
 
       {tasks.length > 0 && (

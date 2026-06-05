@@ -63,7 +63,7 @@ export default function Dashboard () {
   }).format(new Date())
 
   return (
-    <div>
+    <div className='p-4'>
       <div className='mb-10'>
         <h2 className='font-family-display text-xl'>
           {greeting} {icon}
@@ -72,13 +72,7 @@ export default function Dashboard () {
       </div>
       <div className='grid grid-cols-1 sm:grid-cols-1 sm:grid-cols-1 lg:grid-cols-3 gap-6 mb-6'>
         {cardData.map((card, index) => (
-          <Card key={index}>
-            <h3 className='text-[11px] text-text-muted uppercase tracking-[0.07em] mb-[5px]'>
-              {card.title}
-            </h3>
-            <p className='text-[26px] font-light text-text-primary tracking-tight font-family-display'>
-              {card.value}
-            </p>
+          <Card key={index} header={card.title} body={card.value}>
             <div
               className={`${card.tagBgColor} ${card.tagColor} inline-block text-[10px] px-[7px] py-[2px] rounded-[99px] mt-[6px] font-medium`}
             >
