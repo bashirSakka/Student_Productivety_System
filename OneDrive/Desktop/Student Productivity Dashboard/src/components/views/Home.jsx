@@ -26,7 +26,7 @@ export default function Home () {
       >
         <div className='max-w-285 mx-auto px-4 sm:px-8 grid grid-cols-1 lg:grid-cols-[1.04fr_0.96fr] gap-8 lg:gap-14 pt-[clamp(48px,8vw,104px)] pb-[clamp(48px,7vw,92px)] items-center'>
           {/* LEFT: headline copy */}
-          <div>
+          <div className='animate-slideInLeft'>
             <span className='inline-flex items-center gap-2 text-[12.5px] font-medium text-[#7A7265] bg-white border-[0.5px] border-black/15 py-1.5 px-3.5 rounded-[20px] mb-6.5'>
               <span className='w-[10%] h-1.5 rounded-full bg-amber-600' />
               free for students · spring 2026
@@ -75,7 +75,7 @@ export default function Home () {
           </div>
 
           {/* RIGHT: app mockup */}
-          <div className='hidden lg:block w-full rounded-xl shadow-[0px_4px_24px_rgba(0,0,0,0.08)] bg-white'>
+          <div className='hidden lg:block animate-slideInRight w-full rounded-xl shadow-[0px_4px_24px_rgba(0,0,0,0.08)] bg-white'>
             {/* browser bar */}
             <div
               className={`${bgLanding2} flex flex-row gap-6 items-center px-3.5 py-2.75 border-b-[0.5px] border-b-border-strong`}

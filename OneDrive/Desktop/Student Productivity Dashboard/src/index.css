@@ -33,8 +33,20 @@ html {
   --font-family-display: 'Lora', serif;
   --font-family-body: 'DM Sans', sans-serif;
   --animate-slideUp: slideUp 0.45s ease-out both;
+  --animate-slideInLeft: slideInLeft 1s ease-out both;
+  --animate-slideInRight: slideInRight 1s ease-out both;
   --animate-taskEnd: taskEnd 7s  infinite;
   --animate-checkTask: checkTask 7s infinite;
+  @keyframes slideInLeft {
+    from { opacity: 0; transform: translateX(-100px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+
+  @keyframes slideInRight {
+    from { opacity: 0; transform: translateX(100px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+
   @keyframes slideUp {
     from {
       opacity: 0;
