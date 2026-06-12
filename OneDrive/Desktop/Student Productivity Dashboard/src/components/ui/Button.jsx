@@ -4,7 +4,10 @@ export default function Button ({ children, className = '', onClick }) {
   return (
     <div
       onClick={onClick}
-      className={twMerge('border flex items-center justify-center w-max rounded-md border-border-strong py-1.5 px-4 font-medium text-xs cursor-pointer', className)}
+      className={twMerge(
+        'border flex items-center justify-center  rounded-md border-border-strong py-1.5 px-4 font-medium text-xs cursor-pointer',
+        className
+      )}
     >
       {children}
     </div>

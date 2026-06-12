@@ -4,6 +4,7 @@ import { twMerge } from 'tailwind-merge'
 export default function Card ({
   children,
   className = '',
+  style,
   header = '',
   body = '',
   bodyClass = '',
@@ -11,6 +12,7 @@ export default function Card ({
 }) {
   return (
     <div
+      style={style}
       className={twMerge(
         `bg-white p-4 rounded-[10px] border border-border-strong ${className}`
       )}

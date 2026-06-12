@@ -1,5 +1,6 @@
+import { initialState, useWorkStore } from '../../store/pomodoroStore'
 import Card from '../ui/Card'
-
+import PomodoroWidget from '../ui/PomodoroWidget'
 export default function Dashboard () {
   const hour = new Date().getHours()
   const classes = [
@@ -61,6 +62,8 @@ export default function Dashboard () {
     month: 'long',
     day: 'numeric'
   }).format(new Date())
+
+  const work = useWorkStore(state => state.work)
 
   return (
     <div className='p-4'>
@@ -129,28 +132,24 @@ export default function Dashboard () {
             Pomodoro
           </p>
           <Card>
-            <div className='flex flex-col items-center justify-center'>
-              <p className='text-[11px] text-text-muted uppercase tracking-[0.07em] mb-3'>
-                Focus Session
-              </p>
-              <div className='flex mt-3 items-center justify-center w-[88px] h-[88px] rounded-full border-4 border-peach bg-peach-light text-[20px] font-family-display'>
-                23:55
-              </div>
-              <p className='mt-4 text-xs text-text-secondary'>
-                Data Structures - review
-              </p>
+            <PomodoroWidget
+              header={initialState.session}
+              widthHeight='w-[88px] h-[88px]'
+              textSize='text-[20px] '
+            >
+              <p className='mt-4 text-xs text-text-secondary'>{work}</p>
               <div className='flex mt-4 gap-2'>
                 <div className='w-[7px] h-[7px] bg-peach rounded-full'></div>
                 <div className='w-[7px] h-[7px] bg-peach rounded-full'></div>
                 <div className='w-[7px] h-[7px] bg-peach rounded-full'></div>
                 <div className='w-[7px] h-[7px] bg-peach rounded-full'></div>
               </div>
-            </div>
+            </PomodoroWidget>
           </Card>
         </div>
       </div>
 
-      <div className='flex flex-col w-150'>
+      <div className='flex flex-col w-full lg:w-150'>
         <p className='text-[11px] text-text-muted uppercase text-text-primary tracking-[0.07em] mb-[5px]'>
           gpa overview
         </p>
@@ -165,7 +164,6 @@ export default function Dashboard () {
                   {cls.class}
                 </label>
               </div>
-              {console.log(colorGrade[cls.grade])}
               <p
                 className={`text-xs font-medium py-[2px] px-[8px] rounded-[99px] ${
                   colorGrade[cls.grade]

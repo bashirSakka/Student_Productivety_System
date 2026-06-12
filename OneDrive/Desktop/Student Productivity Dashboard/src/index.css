@@ -1,6 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap');
 @import "tailwindcss";
 
+html {
+  scroll-behavior: smooth;
+}
+
 @theme {
   --color-cream:        #FAF8F5;
   --color-cream2:       #F3F0EA;
@@ -23,7 +27,50 @@
   --color-text-primary:   #2D2A26;
   --color-text-secondary: #7A7570;
   --color-text-muted:     #ADA9A3;
+  --color-landing2:#FFFDF9;
+  --color-landing:#FAEEDA;
   --color-border-strong: rgba(0, 0, 0, 0.13);
   --font-family-display: 'Lora', serif;
   --font-family-body: 'DM Sans', sans-serif;
+  --animate-slideUp: slideUp 0.45s ease-out both;
+  --animate-taskEnd: taskEnd 7s  infinite;
+  --animate-checkTask: checkTask 7s infinite;
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }  @keyframes taskEnd {
+    0% {
+      text-decoration: none;
+        animation-timing-function: ease-out
+    }
+    14.28% {
+      text-decoration: line-through;
+      animation-timing-function: step-end;
+    }    100% {
+      text-decoration: line-through;
+    }
+  }@keyframes checkTask {
+   0% {
+      background-color: white;
+      border-color:transparent;
+       animation-timing-function: ease-out;
+       
+    }
+    14.28% {
+      background-color: oklch(66.6% 0.179 58.318);
+       border-color:oklch(66.6% 0.179 58.318);
+
+       animation-timing-function: step-end;
+    }
+    100%{
+  background-color: oklch(66.6% 0.179 58.318);
+       border-color:oklch(66.6% 0.179 58.318);
+    }
+  }
 }

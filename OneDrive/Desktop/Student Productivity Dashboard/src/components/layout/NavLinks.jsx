@@ -3,7 +3,7 @@ import Card from '../ui/Card'
 import UserMenu from './UserMenu'
 import { useState } from 'react'
 const workspaceLinks = [
-  { name: 'Dashboard', path: '/', color: 'bg-sage' },
+  { name: 'Dashboard', path: '/dashboard', color: 'bg-sage' },
   { name: 'Courses', path: '/courses', color: 'bg-lavender' },
   { name: 'Tasks', path: '/tasks', color: 'bg-peach' },
   { name: 'Calendar', path: '/calendar', color: 'bg-sky' }
