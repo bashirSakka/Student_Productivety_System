@@ -5,7 +5,7 @@ import Card from '../ui/Card'
 import Modal from '../ui/Modal'
 import ConfirmModal from '../ui/ConfirmModal'
 import EmptyState from '../ui/EmptyState'
-import emptyTasks from '../animations/noData.json'
+import emptyTasks from '../../assets/animations/noData.json'
 import useTaskStore from '../../store/taskStore'
 
 import {

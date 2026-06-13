@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { IconZoom } from '@tabler/icons-react'
 import EmptyState from '../ui/EmptyState'
-import emptyTasks from '../animations/noData.json'
+import emptyTasks from '../../assets/animations/noData.json'
 import Modal from '../ui/Modal'
 import Button from '../ui/Button'
 import Card from '../ui/Card'
@@ -10,6 +10,7 @@ export default function Notes () {
   const [notes, setNotes] = useState([])
   const [open, setOpen] = useState(false)
   const [search, setSearch] = useState('')
+  const [selected, setSelected] = useState(null)
 
   const [form, setForm] = useState({
     title: '',
@@ -29,13 +30,33 @@ export default function Notes () {
 
   return (
     <div className='grid grid-cols-1 lg:grid-cols-3 gap-6'>
-      <div className='col-span-2 p-4'>
-        {notes.length === 0 && (
+      <div className='col-span-2 p-6'>
+        {notes.length === 0 ? (
           <EmptyState
             animation={emptyTasks}
             title='No notes yet'
             subtitle='Add your first note to get started'
           />
+        ) : (
+          (() => {
+            const note = selected ?? notes.at(-1)
+            return (
+              <div className='max-w-2xl'>
+                <span
+                  className={`${note.color} inline-flex items-center text-[11px] font-medium px-2.5 py-0.5 rounded-full mb-4`}
+                >
+                  {note.course || 'untagged'}
+                </span>
+                <h1 className='font-serif font-bold text-[28px] leading-[1.2] tracking-[-0.02em] text-text-primary mb-4'>
+                  {note.title}
+                </h1>
+                <div className='border-t border-border-strong mb-5' />
+                <p className='text-sm text-text-secondary leading-[1.75] whitespace-pre-wrap'>
+                  {note.content}
+                </p>
+              </div>
+            )
+          })()
         )}
       </div>
 
@@ -61,8 +82,14 @@ export default function Notes () {
               key={el.id}
               header={el.title}
               headerClass='text-xs font-medium text-primary'
-              body={el.content}
+              body={
+                el.content?.slice(0, 80) + (el.content?.length > 80 ? '…' : '')
+              }
               bodyClass='text-xs text-text-3'
+              className={`cursor-pointer transition-colors duration-150 ${
+                selected?.id === el.id ? 'border-lavender-dark' : ''
+              }`}
+              onClick={() => setSelected(el)}
             >
               <div
                 className={`${el.color} rounded-[99px] font-medium text-[10px] w-fit py-px px-1.75 mt-2`}

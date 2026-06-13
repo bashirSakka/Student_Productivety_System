@@ -1,6 +1,6 @@
 import { initialState, useWorkStore } from '../../store/pomodoroStore'
 import Card from '../ui/Card'
-import PomodoroWidget from '../ui/PomodoroWidget'
+import PomodoroWidget from '../pomodoro/PomodoroWidget'
 export default function Dashboard () {
   const hour = new Date().getHours()
   const classes = [

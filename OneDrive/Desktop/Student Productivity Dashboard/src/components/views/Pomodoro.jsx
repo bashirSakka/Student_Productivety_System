@@ -1,7 +1,7 @@
 import Card from '../ui/Card'
 import Pill from '../ui/Pill'
 import Button from '../ui/Button'
-import PomodoroWidget from '../ui/PomodoroWidget'
+import PomodoroWidget from '../pomodoro/PomodoroWidget'
 import { IconPlus, IconMinus } from '@tabler/icons-react'
 import { useCounterStore, useWorkStore, initialState, sessionMapping } from '../../store/pomodoroStore'
 export default function Pomodoro () {

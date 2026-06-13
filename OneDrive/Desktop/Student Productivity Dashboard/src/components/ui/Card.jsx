@@ -5,6 +5,7 @@ export default function Card ({
   children,
   className = '',
   style,
+  onClick,
   header = '',
   body = '',
   bodyClass = '',
@@ -13,6 +14,7 @@ export default function Card ({
   return (
     <div
       style={style}
+      onClick={onClick}
       className={twMerge(
         `bg-white p-4 rounded-[10px] border border-border-strong ${className}`
       )}
@@ -26,7 +28,7 @@ export default function Card ({
       </h3>
       <p
         className={twMerge(
-          `text-[26px] font-light text-text-primary tracking-tight font-family-display ${bodyClass}`
+          `text-[26px] font-light text-text-primary tracking-tight font-family-display ${bodyClass} overflow-hidden`
         )}
       >
         {body}

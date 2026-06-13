@@ -1,6 +1,6 @@
 import { DotLottieReact } from '@lottiefiles/dotlottie-react'
 
-import notFound from '../animations/_404.json'
+import notFound from '../../assets/animations/_404.json'
 
 export default function NotFound () {
   return (

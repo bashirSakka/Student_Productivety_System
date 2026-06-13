@@ -10,11 +10,11 @@ import Notes from './components/views/Notes'
 import Pomodoro from './components/views/Pomodoro'
 import Courses from './components/views/Courses'
 import Tasks from './components/views/Tasks'
-import Calender from './components/views/Calender'
+import Calendar from './components/views/calendar'
 import NotFound from './components/views/NotFound'
 import GPACalculator from './components/views/GPACalculator'
 import { useCounterStore } from './store/pomodoroStore'
-import Home from './components/views/Home'
+import Home from './components/landing/Home'
 function App () {
   const isActive = useCounterStore(state => state.isActive)
   const tick = useCounterStore(state => state.tick)
@@ -65,7 +65,7 @@ function App () {
               <GridSection
                 navbar={<Navbar />}
                 burger={<Burger />}
-                page={<Calender />}
+                page={<Calendar />}
               />
             }
           />

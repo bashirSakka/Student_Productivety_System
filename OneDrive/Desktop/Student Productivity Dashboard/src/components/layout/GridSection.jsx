@@ -1,7 +1,7 @@
 import { useViewport } from '../../hooks/ViewportContext'
 import { useState, useEffect } from 'react'
 import { DotLottieReact } from '@lottiefiles/dotlottie-react'
-import typingAnimation from '../animations/typing.json'
+import typingAnimation from '../../assets/animations/typing.json'
 
 export default function GridSection ({ navbar, burger, page }) {
   const { isMobile } = useViewport()
@@ -24,8 +24,8 @@ export default function GridSection ({ navbar, burger, page }) {
   if (isMobile) {
     return (
       <div className='flex flex-col h-full border border-border-strong rounded-[10px] overflow-hidden'>
-        <div className='sticky top-0 z-30'>{burger}</div>
-        <div className='flex-1 overflow-y-auto bg-cream '>{page}</div>
+        {burger}
+        <div className='flex-1 overflow-y-auto bg-cream pt-13'>{page}</div>
       </div>
     )
   } else {

@@ -26,7 +26,7 @@ export default function Home () {
       >
         <div className='max-w-285 mx-auto px-4 sm:px-8 grid grid-cols-1 lg:grid-cols-[1.04fr_0.96fr] gap-8 lg:gap-14 pt-[clamp(48px,8vw,104px)] pb-[clamp(48px,7vw,92px)] items-center'>
           {/* LEFT: headline copy */}
-          <div className='animate-slideInLeft'>
+          <div className='animate-slideInLeft text-center lg:text-left flex flex-col items-center lg:items-start'>
             <span className='inline-flex items-center gap-2 text-[12.5px] font-medium text-[#7A7265] bg-white border-[0.5px] border-black/15 py-1.5 px-3.5 rounded-[20px] mb-6.5'>
               <span className='w-[10%] h-1.5 rounded-full bg-amber-600' />
               free for students · spring 2026
@@ -50,7 +50,7 @@ export default function Home () {
                 href='#top'
                 className='rounded-lg text-sm font-medium no-underline'
               >
-                <Button className={btn}>start for free</Button>
+                <Button className={btn}>start now</Button>
               </a>
               <a
                 href='#features'
