@@ -23,7 +23,8 @@ export default function Notes () {
   const [open, setOpen] = useState(false)
   const [pageNumber, setPageNumber] = useState(1)
   const [lastPage, setLastPage] = useState(1)
-  const userId = useAuthStore.getState().id
+  const [isLoading, setIsLoading] = useState(true)
+  const userId = useAuthStore(state => state.id)
 
   useEffect(() => {
     async function fetchNotes () {
@@ -32,6 +33,7 @@ export default function Notes () {
       )
       setNotes(resp.data.data)
       setLastPage(resp.data.last_page ?? 1)
+      setIsLoading(false)
     }
     if (userId) fetchNotes()
   }, [userId, pageNumber])
@@ -41,7 +43,7 @@ export default function Notes () {
   const [form, setForm] = useState({
     title: '',
     content: '',
-    course: '',
+    course_tag: '',
     color: 'bg-lavender'
   })
 
@@ -50,7 +52,7 @@ export default function Notes () {
   const [editForm, setEditForm] = useState({
     title: '',
     content: '',
-    course: '',
+    course_tag: '',
     color: 'bg-lavender'
   })
 
@@ -65,10 +67,16 @@ export default function Notes () {
 
   const close = () => setOpen(false)
 
-  function handleSubmit () {
+  async function handleSubmit () {
     if (!form.title.trim()) return
-    setNotes([...notes, { ...form, id: Date.now() }])
-    setForm({ title: '', content: '', course: '', color: 'bg-lavender' })
+    const { data } = await api.post('/api/note', {
+      ...form,
+      user_id: userId,
+      pinned: false
+    })
+    setNotes(prev => [...prev, data])
+    setForm({ title: '', content: '', course_tag: '', color: 'bg-lavender' })
+    toast.success('Note created')
     close()
   }
 
@@ -115,7 +123,7 @@ export default function Notes () {
   return (
     <div className='flex h-full'>
       <div className='flex-1 overflow-y-auto p-6'>
-        {notes.length === 0 ? (
+        {isLoading ? null : notes.length === 0 ? (
           <EmptyState
             animation={emptyTasks}
             title='No notes yet'
@@ -177,7 +185,15 @@ export default function Notes () {
           </div>
         </div>
         <div className='flex flex-col gap-2 px-3 flex-1 overflow-y-auto'>
-          {filteredNotes.map(el => (
+          {isLoading
+            ? Array.from({ length: 5 }).map((_, i) => (
+                <div key={i} className='rounded-[10px] border border-border-strong p-3 animate-pulse'>
+                  <div className='h-2.5 bg-cream3 rounded w-3/4 mb-2' />
+                  <div className='h-2 bg-cream3 rounded w-full mb-1' />
+                  <div className='h-2 bg-cream3 rounded w-2/3' />
+                </div>
+              ))
+            : filteredNotes.map(el => (
             <Card
               key={el.id}
               header={el.title}
@@ -216,7 +232,7 @@ export default function Notes () {
               </div>
             </Card>
           ))}
-          {filteredNotes.length === 0 && (
+          {!isLoading && filteredNotes.length === 0 && (
             <p className='text-xs text-text-muted text-center mt-4'>
               {search.trim() ? 'No matches found' : 'No notes yet'}
             </p>
@@ -276,8 +292,8 @@ export default function Notes () {
             <div className='flex flex-col gap-1'>
               <label className='text-[11px] text-text-muted'>Course tag</label>
               <input
-                value={form.course}
-                onChange={e => setForm({ ...form, course: e.target.value })}
+                value={form.course_tag}
+                onChange={e => setForm({ ...form, course_tag: e.target.value })}
                 placeholder='e.g. CS 301'
                 className='border border-border-strong rounded-md px-3 py-2 text-xs bg-cream focus:outline-none focus:border-lavender-dark'
               />

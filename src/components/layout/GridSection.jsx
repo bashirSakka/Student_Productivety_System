@@ -1,25 +1,7 @@
 import { useViewport } from '../../hooks/ViewportContext'
-import { useState, useEffect } from 'react'
-import { DotLottieReact } from '@lottiefiles/dotlottie-react'
-import typingAnimation from '../../assets/animations/typing.json'
 
 export default function GridSection ({ navbar, burger, page }) {
   const { isMobile } = useViewport()
-  const [loading, setLoading] = useState(true)
-  useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 2500)
-    return () => clearTimeout(timer)
-  }, [])
-  if (loading) {
-    return (
-      <div className='h-screen flex flex-col items-center justify-center bg-cream'>
-        <div className='w-[80%]'>
-          <DotLottieReact data={typingAnimation} loop autoplay />
-        </div>
-        <p className='text-text-muted text-sm mt-4'>Loading studyflow...</p>
-      </div>
-    )
-  }
 
   if (isMobile) {
     return (

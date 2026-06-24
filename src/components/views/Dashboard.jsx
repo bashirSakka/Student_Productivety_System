@@ -1,27 +1,41 @@
-import { initialState, useWorkStore } from '../../store/pomodoroStore'
+import { useCounterStore, useWorkStore } from '../../store/pomodoroStore'
 import Card from '../ui/Card'
 import PomodoroWidget from '../pomodoro/PomodoroWidget'
+import useGpaStore from '../../store/gpaStore'
+import useTaskStore from '../../store/taskStore'
+
 export default function Dashboard () {
   const hour = new Date().getHours()
-  const classes = [
-    { class: 'Math', grade: 'A', credits: 4 },
-    { class: 'English', grade: 'B', credits: 3 },
-    { class: 'Physics', grade: 'C', credits: 4 },
-    { class: 'History', grade: 'A', credits: 3 },
-    { class: 'Computer Science', grade: 'B', credits: 3 }
-  ]
-  const colorGrade = {
-    A: 'bg-sage-light',
-    B: 'bg-sky-light',
-    C: 'bg-lavender-light',
-    D: 'bg-red-light',
-    F: 'bg-red-light'
-  }
+  const gpa      = useGpaStore(state => state.gpa)
+  const classes  = useGpaStore(state => state.courses)
+  const allTasks = useTaskStore(state => state.tasks)
+  const session  = useCounterStore(state => state.session)
+  const round    = useCounterStore(state => state.round)
+  const timers   = useCounterStore(state => state.timers)
+
+  const dueTasks = allTasks
+    .filter(t => t.status !== 'completed' && t.due_at)
+    .sort((a, b) => new Date(a.due_at) - new Date(b.due_at))
+    .slice(0, 5)
+
+  const gradeColor = g => ({
+    A: 'bg-sage-light text-sage-dark',
+    B: 'bg-sky-light text-sky',
+    C: 'bg-lavender-light text-lavender-dark',
+    D: 'bg-peach-light text-peach-dark',
+    F: 'bg-red-200 text-red-700'
+  })[g?.[0]] ?? 'bg-cream3 text-text-muted'
+
+  const sessionLabel = session === 'work'
+    ? 'Focus'
+    : session === 'shortBreak'
+    ? 'Short Break'
+    : 'Long Break'
 
   const cardData = [
     {
       title: 'Current GPA',
-      value: '3.8',
+      value: gpa !== null ? gpa.toFixed(2) : '—',
       tagColor: 'text-sage-dark',
       tagBgColor: 'bg-sage-light',
       tag: '↑ from 3.65'
@@ -35,7 +49,7 @@ export default function Dashboard () {
     },
     {
       title: 'deadlines',
-      value: '3 due',
+      value: `${dueTasks.length} due`,
       tagColor: 'text-lavender-dark',
       tagBgColor: 'bg-lavender-light',
       tag: 'this week'
@@ -90,41 +104,18 @@ export default function Dashboard () {
             Today's Tasks
           </p>
           <Card>
-            {[
-              'Review lecture notes',
-              'Submit assignment',
-              'Study for exam',
-              'Read chapter 4'
-            ].map((task, i) => (
-              <div
-                key={i}
-                className='flex items-center justify-between font-medium border-b border-border-strong p-2'
-              >
-                <div className='flex items-center gap-3'>
-                  <div className='group grid size-4 grid-cols-1'>
-                    <input
-                      type='checkbox'
-                      className='col-start-1 row-start-1 appearance-none rounded-sm border border-border-strong bg-cream checked:border-sage-dark checked:bg-sage-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sage-dark forced-colors:appearance-auto'
-                    />
-                    <svg
-                      viewBox='0 0 14 14'
-                      fill='none'
-                      className='pointer-events-none col-start-1 row-start-1 size-3.5 self-center justify-self-center stroke-white'
-                    >
-                      <path
-                        d='M3 8L6 11L11 3.5'
-                        strokeWidth='2'
-                        strokeLinecap='round'
-                        strokeLinejoin='round'
-                        className='opacity-0 group-has-checked:opacity-100'
-                      />
-                    </svg>
-                  </div>
-                  <label className='text-sm text-text-primary'>{task}</label>
+            {dueTasks.length === 0
+              ? <p className='text-xs text-text-muted text-center py-4'>No upcoming deadlines</p>
+              : dueTasks.map(task => (
+                <div
+                  key={task.id}
+                  className='flex items-center justify-between font-medium border-b border-border-strong p-2 last:border-0'
+                >
+                  <label className='text-sm text-text-primary'>{task.title}</label>
+                  <p className='text-xs text-text-muted'>{task.due_at}</p>
                 </div>
-                <p className='text-xs text-text-muted'>2 hours ago</p>
-              </div>
-            ))}
+              ))
+            }
           </Card>
         </div>
         <div className='flex flex-col'>
@@ -133,46 +124,40 @@ export default function Dashboard () {
           </p>
           <Card>
             <PomodoroWidget
-              header={initialState.session}
+              header={sessionLabel}
               widthHeight='w-[88px] h-[88px]'
-              textSize='text-[20px] '
+              textSize='text-[20px]'
             >
               <p className='mt-4 text-xs text-text-secondary'>{work}</p>
               <div className='flex mt-4 gap-2'>
-                <div className='w-[7px] h-[7px] bg-peach rounded-full'></div>
-                <div className='w-[7px] h-[7px] bg-peach rounded-full'></div>
-                <div className='w-[7px] h-[7px] bg-peach rounded-full'></div>
-                <div className='w-[7px] h-[7px] bg-peach rounded-full'></div>
+                {Array.from({ length: timers.round }).map((_, i) => (
+                  <div key={i} className={`w-1.75 h-1.75 rounded-full ${i < round ? 'bg-peach' : 'bg-cream3'}`} />
+                ))}
               </div>
             </PomodoroWidget>
           </Card>
         </div>
       </div>
 
-      <div className='flex flex-col w-full lg:w-150'>
-        <p className='text-[11px] text-text-muted uppercase text-text-primary tracking-[0.07em] mb-[5px]'>
-          gpa overview
+      <div className='flex flex-col w-full lg:w-150 mt-6'>
+        <p className='text-[11px] text-text-muted uppercase tracking-[0.07em] mb-1.25'>
+          GPA Overview
         </p>
         <Card>
-          {classes.map((cls, i) => (
-            <div
-              key={i}
-              className='flex items-center justify-between border-b border-border-strong p-2'
-            >
-              <div className='flex items-center gap-3'>
-                <label className='text-sm text-text-primary font-medium'>
-                  {cls.class}
-                </label>
-              </div>
-              <p
-                className={`text-xs font-medium py-[2px] px-[8px] rounded-[99px] ${
-                  colorGrade[cls.grade]
-                }`}
+          {classes.length === 0
+            ? <p className='text-xs text-text-muted text-center py-4'>Visit GPA Calculator to load your courses</p>
+            : classes.map((cls, i) => (
+              <div
+                key={i}
+                className='flex items-center justify-between border-b border-border-strong p-2 last:border-0'
               >
-                {cls.grade}
-              </p>
-            </div>
-          ))}
+                <label className='text-sm text-text-primary font-medium'>{cls.name}</label>
+                <span className={`text-xs font-medium py-0.5 px-2 rounded-full ${gradeColor(cls.grade)}`}>
+                  {cls.grade}
+                </span>
+              </div>
+            ))
+          }
         </Card>
       </div>
     </div>

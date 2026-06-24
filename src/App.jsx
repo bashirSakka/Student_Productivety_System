@@ -1,24 +1,25 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import { useEffect } from 'react'
+import { useEffect, lazy, Suspense } from 'react'
 
 import ViewportProvider from './hooks/ViewportContext'
 import GridSection from './components/layout/GridSection'
 import ProtectedRoute from './components/layout/ProtectedRoute'
 import Navbar from './components/layout/Navbar'
 import Burger from './components/layout/Burger'
-import Dashboard from './components/views/Dashboard'
-import Notes from './components/views/Notes'
-import Pomodoro from './components/views/Pomodoro'
-import Courses from './components/views/Courses'
-import Tasks from './components/views/Tasks'
-import Calendar from './components/views/calendar'
-import NotFound from './components/views/NotFound'
-import GPACalculator from './components/views/GPACalculator'
 import { useCounterStore } from './store/pomodoroStore'
 import Home from './components/landing/Home'
 import Login from './components/views/auth/Login'
 import Register from './components/views/auth/Register'
 import { Toaster } from 'sonner'
+
+const Dashboard    = lazy(() => import('./components/views/Dashboard'))
+const Notes        = lazy(() => import('./components/views/Notes'))
+const Pomodoro     = lazy(() => import('./components/views/Pomodoro'))
+const Courses      = lazy(() => import('./components/views/Courses'))
+const Tasks        = lazy(() => import('./components/views/Tasks'))
+const Calendar     = lazy(() => import('./components/views/calendar'))
+const GPACalculator = lazy(() => import('./components/views/GPACalculator'))
+const NotFound     = lazy(() => import('./components/views/NotFound'))
 function App () {
   const isActive = useCounterStore(state => state.isActive)
   const tick = useCounterStore(state => state.tick)
@@ -26,11 +27,12 @@ function App () {
     if (!isActive) return
     const id = setInterval(tick, 1000)
     return () => clearInterval(id)
-  }, [isActive])
+  }, [isActive, tick])
 
   return (
     <ViewportProvider>
       <Router>
+        <Suspense fallback={null}>
         <Routes>
           <Route path='/' element={<Home />} />
           <Route
@@ -93,6 +95,7 @@ function App () {
           <Route path='/register' element={<Register />} />
           <Route path='*' element={<NotFound />} />
         </Routes>
+        </Suspense>
         <Toaster position='bottom-right' richColors />
       </Router>
     </ViewportProvider>

@@ -4,10 +4,9 @@ import Modal from '../ui/Modal'
 import ConfirmModal from '../ui/ConfirmModal'
 import FormInput from '../ui/FormInput'
 import { IconTrash, IconEdit, IconCirclePlus } from '@tabler/icons-react'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import api from '../../lib/api'
 import { toast } from 'sonner'
-import authStore from '../../store/authStore'
 import useAuthStore from '../../store/authStore'
 const colorMap = {
   'bg-sage': {
@@ -65,12 +64,15 @@ export default function Courses () {
   const [selected, setSelected] = useState(null)
   const [form, setForm] = useState(emptyForm)
   const [filter, setFilter] = useState('all')
-  const userId = useAuthStore.getState().id
+  const userId = useAuthStore(state => state.id)
 
-  const filteredCourses =
-    filter === 'all'
+  const filteredCourses = useMemo(
+    () => filter === 'all'
       ? courseList
-      : courseList.filter(c => (c.status ?? 'active') === filter)
+      : courseList.filter(c => (c.status ?? 'active') === filter),
+    [filter, courseList]
+  )
+
   function openModal (type, course = null) {
     setSelected(course)
     setActiveModal(type)
@@ -79,7 +81,7 @@ export default function Courses () {
         code: course.code,
         name: course.name,
         instructor: course.instructor,
-        percent: course.grade.percent,
+        percent: '',
         credits: course.credits,
         semester: course.semester ?? '',
         color: course.color,
@@ -93,32 +95,21 @@ export default function Courses () {
     setSelected(null)
     setForm(emptyForm)
   }
+  const [isLoading, setIsLoading] = useState(true)
+
   useEffect(() => {
-    async function fetchCourses () {
-      const { data } = await api.get(`/api/courses`)
-      setCourseList(data)
-    }
-    if (userId) fetchCourses()
+    if (userId) refetch()
   }, [userId])
+
+  async function refetch () {
+    const { data } = await api.get('/api/courses')
+    setCourseList(data)
+    setIsLoading(false)
+  }
 
   async function handleSave () {
     if (!form.code.trim() || !form.name.trim()) return
-    const { borderColor, gradeClass } = colorMap[form.color]
     const percent = Number(form.percent)
-    const course = {
-      user_id: userId,
-      code: form.code,
-      name: form.name,
-      instructor: form.instructor,
-      grade: { letter: letterFromPercent(percent), percent },
-      credits: Number(form.credits),
-      semester: form.semester,
-      color: form.color,
-      borderColor,
-      gradeClass,
-      status: form.status
-    }
-    console.log('', userId)
     const payload = {
       user_id: userId,
       code: form.code,
@@ -133,16 +124,16 @@ export default function Courses () {
 
     if (activeModal === 'create') {
       await api.post('/api/course', payload)
-      setCourseList(prev => [...prev, course])
       toast.success('Course added successfully')
     } else {
-      await api.patch(`/api/course/${selected.code}`, payload)
-      setCourseList(prev =>
-        prev.map(c => (c.code === selected.code ? course : c))
-      )
+      await api.patch(`/api/course/${selected.id}`, {
+        ...payload,
+        id: selected.id
+      })
       toast.success('Course updated successfully')
     }
 
+    await refetch()
     closeModal()
   }
 
@@ -180,12 +171,7 @@ export default function Courses () {
           },
           {
             label: 'Current GPA',
-            value: courseList.length
-              ? (
-                  courseList.reduce((s, c) => s + (c.grade?.percent || 0), 0) /
-                  courseList.length
-                ).toFixed(1)
-              : '—'
+            value: courseList.length ? '—' : '—'
           },
           {
             label: 'Completed',
@@ -232,13 +218,28 @@ export default function Courses () {
       </div>
 
       <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mt-4'>
-        {filteredCourses.map(el => (
+        {isLoading
+          ? Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className='rounded-[10px] border border-border-strong border-l-4 border-l-cream3 p-4 animate-pulse'>
+                <div className='h-3 bg-cream3 rounded w-1/3 mb-3' />
+                <div className='h-3.5 bg-cream3 rounded w-2/3 mb-6' />
+                <div className='h-2.5 bg-cream3 rounded w-1/2 mb-4' />
+                <div className='border-t border-cream3 pt-2 flex justify-between'>
+                  <div className='h-4 bg-cream3 rounded w-16' />
+                  <div className='flex gap-2'>
+                    <div className='h-4 w-4 bg-cream3 rounded' />
+                    <div className='h-4 w-4 bg-cream3 rounded' />
+                  </div>
+                </div>
+              </div>
+            ))
+          : filteredCourses.map(el => (
           <Card
             key={el.id}
             header={el.code}
             body={el.name}
             bodyClass='text-[13.5px]/[1.4] mt-3 font-medium font-family-display'
-            className={`border-l-4 ${el.borderColor}`}
+            className={`border-l-4 ${colorMap[el.color]?.borderColor}`}
           >
             <div className='flex mt-3 mb-3 items-center text-xs text-text-3'>
               {el.instructor}
@@ -247,9 +248,11 @@ export default function Courses () {
               <div className='flex items-center gap-1.5'>
                 {(el.status ?? 'active') === 'completed' && (
                   <div
-                    className={`font-medium w-fit ${el.gradeClass} rounded-md text-[11px] py-0.5 px-2`}
+                    className={`font-medium w-fit ${
+                      colorMap[el.color]?.gradeClass
+                    } rounded-md text-[11px] py-0.5 px-2`}
                   >
-                    {el.grade.percent}
+                    {el.grade}
                   </div>
                 )}
                 <span
