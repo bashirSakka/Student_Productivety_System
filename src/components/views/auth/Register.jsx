@@ -60,12 +60,15 @@ export default function Register () {
             value={form.email}
             onChange={e => setForm({ ...form, email: e.target.value })}
           />
-          <FormInput
-            label='Password'
-            type='password'
-            value={form.password}
-            onChange={e => setForm({ ...form, password: e.target.value })}
-          />
+          <div className='flex flex-col gap-1'>
+            <FormInput
+              label='Password'
+              type='password'
+              value={form.password}
+              onChange={e => setForm({ ...form, password: e.target.value })}
+            />
+            <p className='text-[11px] text-text-muted'>Must be at least 6 characters</p>
+          </div>
           <FormInput
             label='Confirm password'
             type='password'
