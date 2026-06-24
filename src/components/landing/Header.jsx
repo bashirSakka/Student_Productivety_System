@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom'
+
 export default function LandingHeader ({ view }) {
   return (
     <header
@@ -31,18 +33,18 @@ export default function LandingHeader ({ view }) {
 
         {/* Right: sign in + CTA */}
         <div className='flex items-center gap-[18px]'>
-          <a
-            href='/register'
+          <Link
+            to='/register'
             className='hidden sm:inline text-sm text-[#7A7265] no-underline'
           >
             Sign Up
-          </a>
-          <a
-            href='/login'
+          </Link>
+          <Link
+            to='/login'
             className='inline-flex items-center bg-[#D85A30] text-white py-2 px-4 rounded-lg text-[13px] font-medium no-underline hover:opacity-90 transition-opacity duration-150'
           >
             Log In
-          </a>
+          </Link>
         </div>
       </div>
     </header>
