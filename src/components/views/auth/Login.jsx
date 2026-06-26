@@ -29,7 +29,7 @@ export default function Login () {
       navigate('/dashboard')
     } catch (err) {
       const data = err.response?.data
-      const errs = data?.errors ?? (data?.message ? { message: [data.message] } : { message: ['Something went wrong. Please try again.'] })
+      const errs = data?.errors ?? (data?.message ? { message: [data.message] } : { message: ['Invalid credentials, please try again.'] })
       setErrors(errs)
       setLoading(false)
     }
