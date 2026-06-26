@@ -10,6 +10,7 @@ import api from '../../../lib/api'
 export default function Login () {
   const [form, setForm] = useState({ email: '', password: '' })
   const [errors, setErrors] = useState({})
+  const [loading, setLoading] = useState(false)
   const { email, password } = form
   const setToken = useAuthStore(state => state.setToken)
   const setId = useAuthStore(state => state.setId)
@@ -19,6 +20,7 @@ export default function Login () {
   async function handleSubmit (e) {
     e.preventDefault()
     setErrors({})
+    setLoading(true)
     try {
       const { data } = await api.post('/api/login', { email, password })
       setToken(data.token)
@@ -26,7 +28,10 @@ export default function Login () {
       setUser(data.user.name)
       navigate('/dashboard')
     } catch (err) {
-      setErrors(err.response?.data?.errors ?? {})
+      const data = err.response?.data
+      const errs = data?.errors ?? (data?.message ? { message: [data.message] } : { message: ['Something went wrong. Please try again.'] })
+      setErrors(errs)
+      setLoading(false)
     }
   }
 
@@ -75,9 +80,16 @@ export default function Login () {
 
           <Button
             onClick={handleSubmit}
-            className={`${btn} w-full mt-1 text-sm`}
+            disabled={loading}
+            className={`${btn} w-full mt-1 text-sm flex items-center justify-center gap-2 disabled:opacity-70`}
           >
-            Sign in
+            {loading && (
+              <svg className='animate-spin h-4 w-4 shrink-0' viewBox='0 0 24 24' fill='none'>
+                <circle className='opacity-25' cx='12' cy='12' r='10' stroke='currentColor' strokeWidth='4' />
+                <path className='opacity-75' fill='currentColor' d='M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z' />
+              </svg>
+            )}
+            {loading ? 'Signing in…' : 'Sign in'}
           </Button>
         </form>
 
