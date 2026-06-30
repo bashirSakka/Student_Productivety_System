@@ -5,6 +5,28 @@ html {
   scroll-behavior: smooth;
 }
 
+body {
+  color: var(--color-text-primary);
+}
+
+html[data-theme="dark"] {
+  --color-cream:          #1C1A17;
+  --color-cream2:         #252320;
+  --color-cream3:         #2E2C28;
+  --color-text-primary:   #F0EDE8;
+  --color-text-secondary: #A8A49E;
+  --color-text-muted:     #706C66;
+  --color-text-2:         #A8A49E;
+  --color-text-3:         #706C66;
+  --color-border-strong:  rgba(255,255,255,0.10);
+  --color-lavender-light: #2A2640;
+  --color-peach-light:    #2E2118;
+  --color-sage-light:     #1A2B19;
+  --color-sky-light:      #162230;
+  --color-landing:        #1C1A17;
+  --color-landing2:       #1C1A17;
+}
+
 @theme {
   --color-cream:        #FAF8F5;
   --color-cream2:       #F3F0EA;

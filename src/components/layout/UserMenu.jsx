@@ -5,31 +5,18 @@ import useAuthStore from '../../store/authStore'
 import api from '../../lib/api'
 import {
   IconDots,
-  IconUser,
-  IconAdjustments,
-  IconClock,
-  IconDownload,
   IconTrash,
   IconLogout2
 } from '@tabler/icons-react'
+import Avatar from '../ui/Avatar'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 
 const menuItems = [
   {
     section: [
-      { label: 'Profile', icon: IconUser },
-      {
-        label: 'Preferences',
-        icon: IconAdjustments,
-        hint: 'theme, colors',
-        modal: 'preferences'
-      },
       { label: 'LogOut', icon: IconLogout2, danger: true, logout: true }
     ]
-  },
-  {
-    section: [{ label: 'Export data', icon: IconDownload }]
   },
   {
     section: [
@@ -44,6 +31,7 @@ export default function UserMenu () {
   const closeModal = () => setActiveModal(null)
   const userName = useAuthStore(state => state.user)
   const clearAuth = useAuthStore(state => state.clearAuth)
+  const [resetLoading, setResetLoading] = useState(false)
   async function logOut () {
     try {
       await api.post('/api/logout')
@@ -52,12 +40,22 @@ export default function UserMenu () {
       navigate('/login')
     } catch (error) {}
   }
+  async function resetData () {
+    setResetLoading(true)
+    try {
+      await api.post('/api/reset')
+      toast.success('All data has been reset.')
+      closeModal()
+    } catch {
+      toast.error('Failed to reset data.')
+    } finally {
+      setResetLoading(false)
+    }
+  }
   return (
     <Menu as='div' className='relative w-full'>
-      <MenuButton className='flex flex-row p-2 gap-3 items-center cursor-pointer w-full rounded-[8px] border border-transparent transition-colors duration-150 data-open:bg-white data-open:border-border-strong data-closed:bg-lavender-light data-closed:border-lavender-dark hover:bg-lavender-light'>
-        <div className='w-[26px] h-[26px] text-xs flex justify-center items-center rounded-full bg-lavender text-lavender-dark font-medium shrink-0'>
-          BS
-        </div>
+      <MenuButton className='flex flex-row p-2 gap-3 items-center cursor-pointer w-full rounded-[8px] border border-transparent transition-colors duration-150 data-open:bg-cream2 data-open:border-border-strong data-closed:bg-lavender-light data-closed:border-lavender-dark hover:bg-lavender-light'>
+        <Avatar name={userName} className='w-6.5 h-6.5 text-xs shrink-0' />
         <div className='flex flex-col text-left flex-1'>
           <p className='font-medium text-xs text-text-primary leading-none mb-0.5'>
             {userName}
@@ -70,12 +68,10 @@ export default function UserMenu () {
       <MenuItems
         transition
         anchor='down'
-        className='w-[var(--button-width)] origin-bottom rounded-xl bg-[#FFFEFB] border border-cream3 shadow-lg z-50 mb-2 transition duration-150 ease-out data-closed:scale-y-95 data-closed:opacity-0 data-closed:origin-bottom'
+        className='w-[var(--button-width)] origin-bottom rounded-xl bg-cream2 border border-cream3 shadow-lg z-50 mb-2 transition duration-150 ease-out data-closed:scale-y-95 data-closed:opacity-0 data-closed:origin-bottom'
       >
         <div className='p-3.5 border-b border-cream3 flex items-center gap-2.5'>
-          <div className='w-9 h-9 rounded-full bg-lavender-light flex items-center justify-center text-xs font-medium text-lavender-dark shrink-0'>
-            BS
-          </div>
+          <Avatar name={userName} className='w-9 h-9 text-xs shrink-0' />
           <div>
             <p className='text-sm font-medium text-text-primary'>{userName}</p>
             <p className='text-[11px] text-text-muted mt-0.5'>
@@ -93,6 +89,7 @@ export default function UserMenu () {
                     onClick={() => {
                       if (item.modal) setActiveModal(item.modal)
                       if (item.logout) logOut()
+                      if (item.navigate) navigate(item.navigate)
                     }}
                     className={`flex items-center cursor-pointer gap-2.5 w-full px-4 py-1.5 text-[13px] transition-colors duration-100
                       ${
@@ -134,36 +131,21 @@ export default function UserMenu () {
         <div className='flex gap-2 justify-end'>
           <button
             onClick={closeModal}
-            className='text-xs px-4 py-1.5 rounded-md border border-border-strong text-text-primary hover:bg-cream2 transition-colors cursor-pointer'
+            disabled={resetLoading}
+            className='text-xs px-4 py-1.5 rounded-md border border-border-strong text-text-primary hover:bg-cream2 transition-colors cursor-pointer disabled:opacity-60'
           >
             Cancel
           </button>
           <button
-            onClick={closeModal}
-            className='text-xs px-4 py-1.5 rounded-md bg-red-600 text-white hover:bg-red-700 transition-colors cursor-pointer'
+            onClick={resetData}
+            disabled={resetLoading}
+            className='text-xs px-4 py-1.5 rounded-md bg-red-600 text-white hover:bg-red-700 transition-colors cursor-pointer disabled:opacity-60'
           >
-            Reset
+            {resetLoading ? 'Resetting…' : 'Reset'}
           </button>
         </div>
       </Modal>
 
-      <Modal
-        isOpen={activeModal === 'preferences'}
-        onClose={closeModal}
-        header='Preferences'
-      >
-        <p className='text-xs text-text-muted mb-5'>
-          Theme and color settings coming soon.
-        </p>
-        <div className='flex justify-end'>
-          <button
-            onClick={closeModal}
-            className='text-xs px-4 py-1.5 rounded-md border border-border-strong text-text-primary hover:bg-cream2 transition-colors cursor-pointer'
-          >
-            Close
-          </button>
-        </div>
-      </Modal>
     </Menu>
   )
 }

@@ -111,9 +111,29 @@ export default function GPACalculator () {
     { label: 'Highest GPA', value: '4.00' }
   ]
 
+  const [activeTab, setActiveTab] = useState('Courses')
+
   return (
-    <div className='flex h-full font-family-display'>
-      <div className='flex-1 overflow-y-auto p-6'>
+    <div className='flex flex-col h-full font-family-display'>
+      {/* Small-screen tabs */}
+      <div className='flex gap-1 p-3 border-b border-border-strong lg:hidden'>
+        {['Courses', 'Overview'].map(tab => (
+          <button
+            key={tab}
+            onClick={() => setActiveTab(tab)}
+            className={`text-xs px-4 py-1.5 rounded-md border cursor-pointer transition-colors ${
+              activeTab === tab
+                ? 'bg-lavender-dark text-white border-lavender-dark'
+                : 'border-border-strong text-text-muted hover:bg-cream2'
+            }`}
+          >
+            {tab}
+          </button>
+        ))}
+      </div>
+
+      <div className='flex flex-1 overflow-hidden'>
+      <div className={`flex-1 overflow-y-auto p-6 ${activeTab !== 'Courses' ? 'hidden lg:block' : ''}`}>
         <h2 className='text-2xl font-medium'>GPA Calculator</h2>
         <p className='text-text-muted text-xs mt-0.5'>
           Track your grades and calculate your GPA.
@@ -260,7 +280,7 @@ export default function GPACalculator () {
         </div>
       </div>
 
-      <div className='w-72 shrink-0 h-full overflow-y-auto border-l border-border-strong p-4 flex flex-col gap-3'>
+      <div className={`w-full lg:w-72 lg:shrink-0 h-full overflow-y-auto lg:border-l border-border-strong p-4 flex flex-col gap-3 ${activeTab !== 'Overview' ? 'hidden lg:flex' : ''}`}>
         <div className='bg-cream2 rounded-md p-4 flex flex-col items-center'>
           <p className='text-[52px] font-normal leading-none mt-2'>
             {gpa.toFixed(2)}
@@ -321,6 +341,7 @@ export default function GPACalculator () {
             </div>
           ))}
         </Card>
+      </div>
       </div>
     </div>
   )

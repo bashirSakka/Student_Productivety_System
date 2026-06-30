@@ -47,6 +47,7 @@ export default function Notes () {
     color: 'bg-lavender'
   })
 
+  const [activeTab, setActiveTab] = useState('Notes')
   const [editOpen, setEditOpen] = useState(false)
   const [deleteOpen, setDeleteOpen] = useState(false)
   const [editForm, setEditForm] = useState({
@@ -121,8 +122,26 @@ export default function Notes () {
   }
 
   return (
-    <div className='flex h-full'>
-      <div className='flex-1 overflow-y-auto p-6'>
+    <div className='flex flex-col h-full'>
+      {/* Small-screen tabs */}
+      <div className='flex gap-1 p-3 border-b border-border-strong lg:hidden'>
+        {['Notes', 'View'].map(tab => (
+          <button
+            key={tab}
+            onClick={() => setActiveTab(tab)}
+            className={`text-xs px-4 py-1.5 rounded-md border cursor-pointer transition-colors ${
+              activeTab === tab
+                ? 'bg-lavender-dark text-white border-lavender-dark'
+                : 'border-border-strong text-text-muted hover:bg-cream2'
+            }`}
+          >
+            {tab}
+          </button>
+        ))}
+      </div>
+
+      <div className='flex flex-1 overflow-hidden'>
+      <div className={`flex-1 overflow-y-auto p-6 ${activeTab !== 'View' ? 'hidden lg:block' : ''}`}>
         {isLoading ? null : notes.length === 0 ? (
           <EmptyState
             animation={emptyTasks}
@@ -133,7 +152,7 @@ export default function Notes () {
           (() => {
             const note = selected ?? notes.at(-1)
             return (
-              <div className='max-w-2xl'>
+              <div className='w-full lg:max-w-2xl'>
                 <div className='flex items-center justify-between mb-4'>
                   <span
                     className={`${note.color} inline-flex items-center text-[11px] font-medium px-2.5 py-0.5 rounded-full`}
@@ -168,7 +187,7 @@ export default function Notes () {
         )}
       </div>
 
-      <div className='w-72 shrink-0 h-full flex flex-col border-l border-border-strong p-2'>
+      <div className={`w-full lg:w-72 lg:shrink-0 h-full flex flex-col lg:border-l border-border-strong p-2 ${activeTab !== 'Notes' ? 'hidden lg:flex' : ''}`}>
         <div className='p-3'>
           <h2 className='text-2xl font-family-display font-medium mb-4'>
             Notes
@@ -205,7 +224,7 @@ export default function Notes () {
               className={`cursor-pointer transition-colors duration-150 ${
                 selected?.id === el.id ? 'border-lavender-dark' : ''
               }`}
-              onClick={() => setSelected(el)}
+              onClick={() => { setSelected(el); setActiveTab('View') }}
             >
               <div className='flex items-center justify-between mt-2'>
                 <div
@@ -402,6 +421,7 @@ export default function Notes () {
           title='Delete note?'
           message='This note will be permanently removed. This cannot be undone.'
         />
+      </div>
       </div>
     </div>
   )

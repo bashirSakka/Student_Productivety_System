@@ -291,7 +291,7 @@ export default function Courses () {
         header={activeModal === 'edit' ? 'Edit Course' : 'Create Course'}
       >
         <div className='flex flex-col gap-4'>
-          <div className='flex gap-3'>
+          <div className='flex flex-col sm:flex-row gap-3'>
             <FormInput
               label='Course code'
               value={form.code}
@@ -304,7 +304,7 @@ export default function Courses () {
               value={form.credits}
               onChange={e => setForm({ ...form, credits: e.target.value })}
               placeholder='3'
-              className='w-24 focus:border-lavender-dark'
+              className='sm:w-24 focus:border-lavender-dark'
             />
           </div>
 
@@ -316,7 +316,7 @@ export default function Courses () {
             className='focus:border-lavender-dark'
           />
 
-          <div className='flex gap-3'>
+          <div className='flex flex-col sm:flex-row gap-3'>
             <FormInput
               label='Instructor'
               value={form.instructor}
@@ -343,7 +343,7 @@ export default function Courses () {
             />
           )}
 
-          <div className='flex gap-3'>
+          <div className='flex flex-col sm:flex-row gap-3'>
             <div className='flex flex-col gap-2 flex-1'>
               <label className='text-[11px] text-text-muted'>
                 Accent color

@@ -170,51 +170,84 @@ const SAMPLE_DEADLINES = [
 
 // ---------------------------------------------------------------------------
 
+const TABS = ['Calendar', 'Events']
+
 export default function CalendarPage () {
   const [selectedDate, setSelectedDate] = useState(new Date())
+  const [activeTab, setActiveTab] = useState('Calendar')
 
-  // Get events for selected date
   const selectedKey = selectedDate?.toISOString().split('T')[0]
   const selectedEvents = SAMPLE_EVENTS[selectedKey] ?? []
 
+  function handleSelectDate (date) {
+    setSelectedDate(date)
+    setActiveTab('Events')
+  }
+
   function handleAddEvent () {
-    // TODO: open add-event modal / form
     console.log('Add event for', selectedKey)
   }
 
+  const sidebar = (
+    <div className='flex flex-col gap-4'>
+      <DayEventsPanel
+        selectedDate={selectedDate}
+        events={selectedEvents}
+        onAddEvent={handleAddEvent}
+      />
+      <UpcomingDeadlines deadlines={SAMPLE_DEADLINES} />
+    </div>
+  )
+
   return (
-    <div className='flex-1 p-9 px-10 overflow-hidden'>
+    <div className='flex-1 p-6 lg:p-9 lg:px-10 overflow-hidden'>
       {/* Page header */}
-      <div className='mb-7'>
+      <div className='mb-5'>
         <h1 className='font-display text-[26px] font-normal text-text-primary'>
           Calendar
         </h1>
         <p className='text-[13px] text-text-muted mt-0.5'>
-          {new Date().toLocaleDateString('en-US', {
-            month: 'long',
-            year: 'numeric'
-          })}
+          {new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
         </p>
       </div>
 
-      {/* Two-column layout */}
-      <div className='grid grid-cols-[1fr_260px] gap-5'>
-        {/* Main calendar */}
+      {/* Small-screen tabs */}
+      <div className='flex gap-1 mb-4 lg:hidden'>
+        {TABS.map(tab => (
+          <button
+            key={tab}
+            onClick={() => setActiveTab(tab)}
+            className={`text-xs px-4 py-1.5 rounded-md border cursor-pointer transition-colors ${
+              activeTab === tab
+                ? 'bg-lavender-dark text-white border-lavender-dark'
+                : 'border-border-strong text-text-muted hover:bg-cream2'
+            }`}
+          >
+            {tab}
+          </button>
+        ))}
+      </div>
+
+      {/* Small screens: show one panel at a time */}
+      <div className='lg:hidden'>
+        {activeTab === 'Calendar'
+          ? <CalendarGrid
+              events={SAMPLE_EVENTS}
+              selectedDate={selectedDate}
+              onSelectDate={handleSelectDate}
+            />
+          : sidebar
+        }
+      </div>
+
+      {/* Large screens: two-column layout */}
+      <div className='hidden lg:grid grid-cols-[1fr_260px] gap-5'>
         <CalendarGrid
           events={SAMPLE_EVENTS}
           selectedDate={selectedDate}
           onSelectDate={setSelectedDate}
         />
-
-        {/* Right sidebar */}
-        <div className='flex flex-col gap-4'>
-          <DayEventsPanel
-            selectedDate={selectedDate}
-            events={selectedEvents}
-            onAddEvent={handleAddEvent}
-          />
-          <UpcomingDeadlines deadlines={SAMPLE_DEADLINES} />
-        </div>
+        {sidebar}
       </div>
     </div>
   )

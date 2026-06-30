@@ -15,6 +15,10 @@ const toolLinks = [
   { name: 'Notes', path: '/notes', color: 'bg-lavender' }
 ]
 
+const accountLinks = [
+  { name: 'Settings', path: '/settings', color: 'bg-cream3' }
+]
+
 export default function NavLinks ({ onNavigate }) {
   const location = useLocation()
   const [open, setOpen] = useState(false)
@@ -43,6 +47,17 @@ export default function NavLinks ({ onNavigate }) {
           Tools
         </p>
         {toolLinks.map(link => (
+          <Link key={link.name} to={link.path} onClick={onNavigate}>
+            <button className={linkClass(link.path)}>
+              <div className={`rounded-full w-[8px] h-[8px] ${link.color}`} />
+              {link.name}
+            </button>
+          </Link>
+        ))}
+        <p className='mt-3 px-2 mb-1 font-medium text-[10px] text-text-muted tracking-[0.08em] p-3 uppercase'>
+          Account
+        </p>
+        {accountLinks.map(link => (
           <Link key={link.name} to={link.path} onClick={onNavigate}>
             <button className={linkClass(link.path)}>
               <div className={`rounded-full w-[8px] h-[8px] ${link.color}`} />

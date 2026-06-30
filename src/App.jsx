@@ -7,6 +7,7 @@ import ProtectedRoute from './components/layout/ProtectedRoute'
 import Navbar from './components/layout/Navbar'
 import Burger from './components/layout/Burger'
 import { useCounterStore } from './store/pomodoroStore'
+import useThemeStore from './store/themeStore'
 import Home from './components/landing/Home'
 import Login from './components/views/auth/Login'
 import Register from './components/views/auth/Register'
@@ -19,10 +20,17 @@ const Courses      = lazy(() => import('./components/views/Courses'))
 const Tasks        = lazy(() => import('./components/views/Tasks'))
 const Calendar     = lazy(() => import('./components/views/calendar'))
 const GPACalculator = lazy(() => import('./components/views/GPACalculator'))
+const Settings     = lazy(() => import('./components/views/Settings'))
 const NotFound     = lazy(() => import('./components/views/NotFound'))
 function App () {
   const isActive = useCounterStore(state => state.isActive)
   const tick = useCounterStore(state => state.tick)
+  const theme = useThemeStore(state => state.theme)
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme)
+  }, [theme])
+
   useEffect(() => {
     if (!isActive) return
     const id = setInterval(tick, 1000)
@@ -88,6 +96,14 @@ function App () {
             element={
               <ProtectedRoute>
                 <GridSection navbar={<Navbar />} burger={<Burger />} page={<Notes />} />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path='/settings'
+            element={
+              <ProtectedRoute>
+                <GridSection navbar={<Navbar />} burger={<Burger />} page={<Settings />} />
               </ProtectedRoute>
             }
           />

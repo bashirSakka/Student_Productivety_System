@@ -20,10 +20,10 @@ export default function Burger () {
 
   return (
     <header className='fixed top-0 left-0 right-0 z-30 flex items-center justify-between px-4.5 h-13 bg-cream2 border-b border-black/10'>
-      <div className='font-display text-[15px] font-medium text-text-main'>
-        study<span className='italic text-sagedark'>flow</span>
+      <div className='font-display text-[15px] font-medium text-text-primary'>
+        study<span className='italic text-sage-dark'>flow</span>
       </div>
-      <span className='absolute left-1/2 -translate-x-1/2 text-[13px] font-medium text-text-main'>
+      <span className='absolute left-1/2 -translate-x-1/2 text-[13px] font-medium text-text-primary'>
         {pageName}
       </span>
       <button
@@ -52,7 +52,7 @@ export default function Burger () {
       >
         <h1 className='p-8 flex justify-between text-base font-family-display font-medium px-2 pb-5'>
           <div>
-            study<span className='italic text-sagedark'>flow</span>
+            study<span className='italic text-sage-dark'>flow</span>
           </div>
           <IconX stroke={2} onClick={() => setOpen(false)} />
         </h1>

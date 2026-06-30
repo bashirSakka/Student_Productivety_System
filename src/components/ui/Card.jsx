@@ -16,7 +16,7 @@ export default function Card ({
       style={style}
       onClick={onClick}
       className={twMerge(
-        `bg-white p-4 rounded-[10px] border border-border-strong ${className}`
+        `bg-cream2 p-4 rounded-[10px] border border-border-strong ${className}`
       )}
     >
       <h3
